@@ -1,0 +1,45 @@
+<html>
+    <body>
+        <form action="http://localhost:5000/upload" method="POST" enctype="multipart/form-data">
+            <fieldset>
+                <legend>Top N:</legend>
+                <div>
+                    <input type="range" min="1" max="10" value="1" name="top_n"/>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Metric:</legend>
+                <div>
+                    <input type="radio" id="option1" name="metric" value="accuracy" checked/>
+                    <label for="option1">Top-1 Accuracy</label>
+
+                    <input type="radio" id="option2" name="metric" value="top_5_accuracy"/>
+                    <label for="option2">Top-5 Accuracy</label>
+
+                    <input type="radio" id="option3" name="metric" value="loss"/>
+                    <label for="option3">Loss</label>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Option(s):</legend>
+                <div>
+                    <input type="checkbox" id="option_id" name="option_id" checked/>
+                    <label for="option_id">ID</label>
+
+                    <input type="checkbox" id="option_name" name="option_name" />
+                    <label for="option_name">Name</label>
+
+                    <input type="checkbox" id="option_probability" name="option_probability"/>
+                    <label for="option_probability">Probability</label>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Bird Image:</legend>
+                <div>                    
+                    <input type="file" name="file" /><br/>
+                </div>
+            </fieldset>
+            <input type="submit" />
+        </form>
+    </body>
+</html>
