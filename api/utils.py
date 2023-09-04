@@ -1,3 +1,4 @@
+# this file contains all the utility functions used by the API server
 import json
 import numpy as np
 import os
@@ -5,6 +6,7 @@ import tensorflow as tf
 from tensorflow import keras
 from flask import render_template
 
+# this is the initialization function that reads from the config file
 def initialize():        
     config = {}
     with open('config.json') as f:
@@ -20,12 +22,17 @@ def initialize():
             config['models'][m] = keras.models.load_model(c['models'][m])
     return config
 
+# this is a copy of the image loading function from the Jupyter Notebook
+# it loads the file uploaded to the backend and read it from disk to be in a 
+# usable format by the TensorFlow model.
 def load_image(path, config):
     img = tf.io.read_file(path)
     img = tf.image.decode_image(img)
     img = tf.image.resize(img, size=config['img_size'])
     return img
 
+# this function evaluates the given uploaded file, returning the requested data
+# according to the arguments passed from the request
 def evaluate_image(path, config, metric, top_k, options):
     img = load_image(path, config)
     result = config['models'][metric].predict(tf.expand_dims(img, axis=0))
@@ -44,9 +51,15 @@ def evaluate_image(path, config, metric, top_k, options):
         retVal.append(curr)
     return retVal
 
+# handler for a GET request, which renders from the template file, a form
+# that allows the user to select the file to upload as well as arguments
+# governing the model used for the evaluation and also the data to return
 def handle_get():    
     return render_template('upload.html')
 
+# handler for a POST request, it extracts the arguments from the POST form body
+# and uses the evaluate function to actually obtain the relevant data from running
+# the model
 def handle_post(request, config):
     top_n = int(request.form.get('top_n'))
     metric = request.form.get('metric')
@@ -65,8 +78,5 @@ def handle_post(request, config):
         os.remove(tmp_path)
     
     return {
-    #    'top_n': str(top_n),
-    #    'metric': metric,
-    #    'options': options,
         'predictions': retVal
     }
